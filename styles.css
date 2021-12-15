@@ -1,3 +1,7 @@
 /* styles.css */
-
+.zone {
+    border: solid 1px black;
+    width: 300px;
+    height: 300px;
+}
 /* Add styles here to customize the appearance of your app */

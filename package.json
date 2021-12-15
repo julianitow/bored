@@ -4,7 +4,10 @@
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "compile:src": "babel src --out-dir ./dist",
+    "compile": "npm run compile:src",
+    "start": "npm run compile && electron app.js",
+    "electron:version": "electron --version"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -17,6 +20,16 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^16.0.2"
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.5",
+    "@babel/node": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "electron": "^16.0.2",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.0.1",
+    "dotenv": "^10.0.0",
+    "npx": "^10.2.2"
   }
 }
