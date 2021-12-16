@@ -19,15 +19,15 @@ export class ApplicationView {
     }
 
     setEvents() {
-        document.getElementById('target').addEventListener('dragover', this.controller.dragOverHandler);
-        document.getElementById('target').addEventListener('drop', this.controller.dropHandler);
+        document.getElementById('target').addEventListener('dragover', (ev) => { this.controller.dragOverHandler(ev) });
+        document.getElementById('target').addEventListener('drop', (ev) => { this.controller.dropHandler(ev) });
     }
 
     async info() {
         const infoDiv = document.createElement('div');
         infoDiv.id = 'info';
         infoDiv.className = 'info';
-        const space = this.controller.freeSpace().then(space => {
+        this.controller.freeSpace().then(space => {
             infoDiv.innerText = space;
         });
         this.parentElement.append(infoDiv);

@@ -16,11 +16,6 @@ export class ApplicationController {
         return space;
     }
 
-    pushFile(file) {
-        console.log(file);
-        Service.sftp(file.name);
-    }
-
     dragOverHandler(ev) {
         ev.preventDefault();
     }
@@ -36,18 +31,34 @@ export class ApplicationController {
               title: 'C\'est quoi ?',
               message: `${file.name} ?`,
             }
-            dialog.showMessageBox(null, options).then( (response) => {
-              switch(response.response) {
+
+            const res = dialog.showMessageBoxSync(null, options);
+            console.log(this);
+            switch(res) {
                 case 1:
-                    this.pushFile(file);
+                    const fileSize = file.size / 1000000000; //conversion en go
+                    this.freeSpace().then(space => {
+                        let spaceFree = space.split('G')[0];
+                        spaceFree = spaceFree.replace(',', '.');
+                        
+                        if (fileSize >= spaceFree) {
+                            dialog.showMessageBoxSync(null, {
+                                type: 'warning',
+                                message: 'Not enough space available.'
+                            });
+                            return;
+                        }
+
+                        Service.sftp(file.name);
+                    });
+                    Service.sftp(file.name);
                     break;
                 case 2:
                     console.log("Film");
                     break;
                 default:
                     break;
-              }
-            });
+            }
         }
     }
 }
