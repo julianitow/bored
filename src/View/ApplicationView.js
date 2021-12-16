@@ -3,6 +3,7 @@ export class ApplicationView {
     parentElement;
     labelDiv
     infoDiv;
+    zoneDiv;
     controller;
     progress;
 
@@ -49,11 +50,11 @@ export class ApplicationView {
     }
 
     dropZone() {
-        const zoneDiv = document.createElement('div');
-        zoneDiv.id = 'target';
-        zoneDiv.className = 'zone';
-        zoneDiv.innerText = 'Drop file here !';
-        this.parentElement.append(zoneDiv);
+        this.zoneDiv = document.createElement('div');
+        this.zoneDiv.id = 'target';
+        this.zoneDiv.className = 'zone';
+        this.zoneDiv.innerText = 'Drop file here !';
+        this.parentElement.append(this.zoneDiv);
     }
 
     setProgressBar(value) {

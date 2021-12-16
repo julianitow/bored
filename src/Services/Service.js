@@ -2,7 +2,7 @@
 
 import { exec } from 'child_process';
 import dotenv from 'dotenv';
-import { resolve } from 'path';
+import { dialog } from '@electron/remote';
 import Client from 'ssh2-sftp-client'; 
 dotenv.config();
 
@@ -33,6 +33,11 @@ export function sftp(file, type, controller) {
             }
         });
     }).then(() => {
+        controller.updateProgressView(0);
+        dialog.showMessageBoxSync(null, {
+            type: 'info',
+            message: 'Finished !'
+        });
         return client.end();
     }).catch(err => {
         console.error(err);

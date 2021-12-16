@@ -43,6 +43,10 @@ export class ApplicationController {
         this.application.appView.setProgressBar(value);
     }
 
+    disableZone() {
+        //TODO
+    }
+
     dropHandler(ev) {
         ev.preventDefault();
         var data = ev.dataTransfer.getData("application/my-app");
