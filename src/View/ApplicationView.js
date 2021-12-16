@@ -1,7 +1,10 @@
 export class ApplicationView {
 
     parentElement;
+    labelDiv
+    infoDiv;
     controller;
+    progress;
 
     constructor(controller) {
         this.init(controller);
@@ -15,6 +18,7 @@ export class ApplicationView {
     render() {
         this.info();
         this.dropZone();
+        this.progressBar();
         this.setEvents();
     }
 
@@ -23,20 +27,54 @@ export class ApplicationView {
         document.getElementById('target').addEventListener('drop', (ev) => { this.controller.dropHandler(ev) });
     }
 
-    async info() {
-        const infoDiv = document.createElement('div');
-        infoDiv.id = 'info';
-        infoDiv.className = 'info';
+    updateInfo() {
         this.controller.freeSpace().then(space => {
-            infoDiv.innerText = space;
+            this.infoDiv.innerText = space;
         });
-        this.parentElement.append(infoDiv);
+    }
+
+    async info() {
+        this.labelDiv = document.createElement('div');
+        this.labelDiv.id = 'infoLabel';
+        this.labelDiv.classList.add(['label', 'text']);
+        this.labelDiv.innerText = 'Available space:';
+
+        this.infoDiv = document.createElement('div');
+        this.infoDiv.id = 'info';
+        this.infoDiv.className = 'info';
+        this.updateInfo();
+
+        this.labelDiv.append(this.infoDiv);
+        this.parentElement.append(this.labelDiv);
     }
 
     dropZone() {
         const zoneDiv = document.createElement('div');
         zoneDiv.id = 'target';
         zoneDiv.className = 'zone';
+        zoneDiv.innerText = 'Drop file here !';
         this.parentElement.append(zoneDiv);
+    }
+
+    setProgressBar(value) {
+        this.progress.value = value;
+    }
+
+    progressBar() {
+        const progressDiv = document.createElement('div');
+        progressDiv.classList.add(['progressZone']);
+
+        const label = document.createElement('label');
+        label.for = 'fileProgresss';
+        label.innerText = 'Tranfert status:';
+
+        this.progress = document.createElement('progress');
+        this.progress.id = 'fileProgress';
+        this.progress.max = 100;
+        this.progress.value = 0;
+
+        progressDiv.append(label);
+        progressDiv.append(this.progress);
+        this.parentElement.append(progressDiv);
     }
 }

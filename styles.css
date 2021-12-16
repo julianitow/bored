@@ -1,7 +1,31 @@
 /* styles.css */
 .zone {
-    border: solid 1px black;
+    border-radius: 30px;
     width: 300px;
     height: 300px;
+    background-color: #27ae60;
+    margin: auto;
+    text-align: center;
+    font-size: 30px;
+    line-height: 150px;
+}
+
+body {
+    background-color: #2980b9;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+.progressZone {
+    margin-top: 20px;
+}
+
+#infoLabel {
+    display: inline-flex;
+}
+
+.info {
+    font-weight: bold;
 }
 /* Add styles here to customize the appearance of your app */

@@ -7,7 +7,7 @@ export class App {
     controller;
 
     constructor() {
-        this.controller = new ApplicationController();
+        this.controller = new ApplicationController(this);
         this.appView = new ApplicationView(this.controller);
     }
 
