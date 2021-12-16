@@ -10,7 +10,8 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'dist/preload.js')
+      preload: path.join(__dirname, 'dist/preload.js'),
+      nodeIntegration: true
     }
   })
 
@@ -20,7 +21,7 @@ function createWindow () {
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
 
-  require('dotenv').config();
+  require('dotenv').config({ path: './.env'});
   require('@electron/remote/main').initialize();
   require('@electron/remote/main').enable(mainWindow.webContents);
 }

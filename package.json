@@ -4,9 +4,10 @@
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
+    "clean": "rm -rf dist",
     "compile:src": "babel src --out-dir ./dist",
     "compile": "npm run compile:src",
-    "start": "npm run compile && electron app.js",
+    "start": "npm run clean && npm run compile && electron app.js",
     "electron:version": "electron --version"
   },
   "repository": "https://github.com/electron/electron-quick-start",

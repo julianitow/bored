@@ -1,6 +1,5 @@
 import { dialog } from '@electron/remote';
-import { SSH } from '../Services';
-
+import * as Service from '../Services';
 
 export class App {
 
@@ -9,16 +8,23 @@ export class App {
     constructor() {
         this.document = document;
         this.initEvents();
-        this.sshService = new SSH(process.env.HOST, process.env.USER, process.env.PASSWORD);
+        this.view();
     }
 
     initEvents() {
-        if(this.document !== undefined) {
-            document.getElementById('target').addEventListener('dragover', this.dragOverHandler);
-            document.getElementById('target').addEventListener('drop', this.dropHandler);
-            return;
-        }
-        console.error('document undefined');
+        document.getElementById('target').addEventListener('dragover', this.dragOverHandler);
+        document.getElementById('target').addEventListener('drop', this.dropHandler);
+    }
+
+    view() {
+        let info = document.getElementById('info');
+        const freeSpace = Service.getFreeSpace().then(freeSpace => {
+            let p = document.createElement('p');
+            p.innerText = `Space available: ${freeSpace}`;
+            info.append(p);
+        }).catch(err => {
+            console.error(err);
+        })
     }
 
     dragOverHandler(ev) {
@@ -36,11 +42,10 @@ export class App {
               title: 'C\'est quoi ?',
               message: `${file.name} ?`,
             }
-
             dialog.showMessageBox(null, options).then( (response) => {
               switch(response.response) {
                 case 1:
-                    this.sshService.run();
+                    Service.sftp(file.name);
                     break;
                 case 2:
                     console.log("Film");
