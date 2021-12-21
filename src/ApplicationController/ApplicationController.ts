@@ -1,28 +1,28 @@
 import * as Service from '../Services';
 import { dialog } from '@electron/remote';
 import runtime from 'regenerator-runtime';
+import { App } from '../Application/Application';
 
-const DIR_TYPE = '';
 const SERIE_TYPE = 'TV-Shows';
 const FILM_TYPE = 'Movies';
 
 export class ApplicationController {
 
-    application;
+    public application: App;
     
-    constructor(application) {
+    constructor(application: App) {
         this.application = application;
         this.init();
     }
 
-    init() {
+    init(): void {
         setInterval(() => {
             this.updateFreeSpaceView();
         }, 10000);
     }
 
-    async freeSpace() {
-        let space = "";
+    async freeSpace(): Promise<string> {
+        let space: string;
         try {
             space = await Service.getFreeSpace();
         } catch (err) {
@@ -31,35 +31,34 @@ export class ApplicationController {
         return space;
     }
 
-    dragOverHandler(ev) {
+    dragOverHandler(ev): void {
         ev.preventDefault();
     }
 
-    updateFreeSpaceView() {
+    updateFreeSpaceView(): void {
         this.application.appView.updateInfo();
     }
 
-    updateProgressView(value) {
+    updateProgressView(value): void {
         this.application.appView.setProgressBar(value);
     }
 
-    disableZone() {
+    disableZone(): void {
         //TODO
     }
 
-    dropHandler(ev) {
+    dropHandler(ev): void {
         ev.preventDefault();
-        var data = ev.dataTransfer.getData("application/my-app");
         if (ev.dataTransfer.items) {
-            let file = ev.dataTransfer.items[0].getAsFile();
-            const options = {
+            const file: File = ev.dataTransfer.items[0].getAsFile();
+            const options: Electron.MessageBoxOptions  = {
               type: 'question',
               buttons: ['Cancel', 'Serie', 'Film'],
               title: 'C\'est quoi ?',
               message: `${file.name} ?`,
             }
 
-            const res = dialog.showMessageBoxSync(null, options);
+            const res: number = dialog.showMessageBoxSync(null, options);
             switch(res) {
                 case 1:
                     this.upload(file, SERIE_TYPE);
@@ -73,7 +72,7 @@ export class ApplicationController {
         }
     }
 
-    upload(file, type) {
+    upload(file, type): void {
         //TODO Directory implementation
         console.log(file);
         /*if (file.type === DIR_TYPE) {
@@ -83,10 +82,10 @@ export class ApplicationController {
             });
             return;
         }*/
-        const fileSize = file.size / 1000000000; //conversion en go
+        const fileSize: number = file.size / 1000000000; //conversion en go
         this.freeSpace().then(space => {
-            let spaceFree = space.split('G')[0];
-            spaceFree = spaceFree.replace(',', '.');
+            const spaceFreeStr: string = space.split('G')[0];
+            const spaceFree = Number(spaceFreeStr.replace(',', '.'));
             
             if (fileSize >= spaceFree) {
                 dialog.showMessageBoxSync(null, {

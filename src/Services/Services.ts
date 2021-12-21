@@ -7,17 +7,19 @@ import Client from 'ssh2-sftp-client';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
+import { ApplicationController } from '../ApplicationController/ApplicationController';
 dotenv.config();
 
 const DIR_TYPE = '';
 
-const host = process.env.HOST;
-const username = process.env.USER;
-const password = process.env.PASSWORD;
-const remoteDir = process.env.REMOTE_DIR;
-const sshKey = process.env.SSH_KEY;
+const host: string = process.env.HOST;
+const username: string = process.env.USER;
+const password: string = process.env.PASSWORD;
+const remoteDir: string = process.env.REMOTE_DIR;
+const sshKey: string = process.env.SSH_KEY;
 
-function readDirectory(path, callback, endCallback) {
+//TODO finish recursive implementation 
+/*function readDirectory(path, callback, endCallback) {
     fs.readdir(path, (err, files) => {
         if (err) return endCallback(err);
         files.forEach(file => {
@@ -36,24 +38,24 @@ function readDirectory(path, callback, endCallback) {
             });
         });
     });
-};
+};*/
 
 /**
  * Send file over sftp
  * @param {*} file File
  */
-export function sftp(file, type, controller) {
-    const srcPath = file.path;
-    const config = {
+export function sftp(file: File, type: string, controller: ApplicationController): void {
+    const srcPath: string = file.path;
+    const config: Record<string, unknown> = {
         host,
         username,
         password
     };
-    const client = new Client('sftp-file-transfer');
+    const client: Client = new Client('sftp-file-transfer');
     client.connect(config).then(async () => {
         console.log(file.size);
         if (file.type === DIR_TYPE) {
-            const nbFiles = fs.readdir(file.path, (err, files) => {
+            fs.readdir(file.path, (err, files) => {
                 console.log("file", files);
             });
             client.on('upload', info => {
@@ -65,7 +67,7 @@ export function sftp(file, type, controller) {
         }
         return client.fastPut(srcPath, `${remoteDir}/${type}/${file.name}`, {
             step: step => {
-                const percent = Math.floor((step / file.size) * 100);
+                const percent: number = Math.floor((step / file.size) * 100);
                 controller.updateProgressView(percent);
             }
         });
@@ -86,10 +88,10 @@ export function sftp(file, type, controller) {
  * get available space
  * @resolve String
  */
-export function getFreeSpace() {
+export function getFreeSpace(): Promise<string> {
     return new Promise((resolve, reject) => {
         if(sshKey !== '') {
-            cmd = `ssh -i ${sshKey} ${username}@${host} \"df -h | grep sdb | awk \'{print $4}\'\"`
+            cmd = `ssh -i ${sshKey} ${username}@${host} "df -h | grep sdb | awk '{print $4}'"`
             exec(cmd, (err, stdout, stderr) => {
                 if (err) {
                     reject(err);

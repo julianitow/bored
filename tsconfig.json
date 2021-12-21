@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "isolatedModules": true,
+        "target": "ES6",
+        "moduleResolution": "node"
+    },
+    "include": [
+      "src/**/*"
+    ]
+  }
