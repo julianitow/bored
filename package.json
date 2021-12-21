@@ -25,7 +25,7 @@
     "@babel/core": "^7.16.5",
     "@babel/node": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
-    "electron": "^16.0.4",
+    "electron": "^16.0.5",
     "mkdirp": "^1.0.4",
     "nodemon": "^2.0.15",
     "regenerator-runtime": "^0.13.9",
