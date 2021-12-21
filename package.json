@@ -4,7 +4,7 @@
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "clean": "rm -rf dist",
+    "clean": "rimraf ./dist",
     "compile:src": "babel src --out-dir ./dist",
     "compile": "npm run compile:src",
     "start": "npm run clean && npm run compile && electron app.js",
@@ -26,8 +26,10 @@
     "@babel/node": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
     "electron": "^16.0.4",
+    "mkdirp": "^1.0.4",
     "nodemon": "^2.0.15",
-    "regenerator-runtime": "^0.13.9"
+    "regenerator-runtime": "^0.13.9",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
     "@electron/remote": "^2.0.1",

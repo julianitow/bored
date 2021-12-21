@@ -4,7 +4,7 @@ import runtime from 'regenerator-runtime';
 
 const DIR_TYPE = '';
 const SERIE_TYPE = 'TV-Shows';
-const FILM_TYPE = 'Film';
+const FILM_TYPE = 'Movies';
 
 export class ApplicationController {
 
@@ -95,7 +95,7 @@ export class ApplicationController {
                 });
                 return;
             }
-            Service.sftp(file, SERIE_TYPE, this);
+            Service.sftp(file, type, this);
         });
     }
 }
