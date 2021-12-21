@@ -10,6 +10,8 @@
 
 All done
 
+## Next steps
+Use typescript instead of Vanilla JS
 ***
 ## Disclaimer
 
