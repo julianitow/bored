@@ -1,29 +1,30 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-const path = require('path');
+import { app, BrowserWindow } from 'electron';
+import * as path from 'path';
+import * as dotenv from 'dotenv';
+import * as remote from '@electron/remote/main';
+let mainWindow: BrowserWindow;
 
-let mainWindow;
-
-function createWindow () {
+function createWindow (): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'dist/preload.js'),
+      preload: path.join(__dirname, './preload.js'),
       nodeIntegration: true
     }
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile(path.join(__dirname, './assets/index.html'));
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
 
-  require('dotenv').config({ path: './.env'});
-  require('@electron/remote/main').initialize();
-  require('@electron/remote/main').enable(mainWindow.webContents);
+  dotenv.config({ path: './conf/.env'});
+  remote.initialize();
+  remote.enable(mainWindow.webContents);
 }
 
 // This method will be called when Electron has finished

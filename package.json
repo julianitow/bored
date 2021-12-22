@@ -1,17 +1,35 @@
 {
   "name": "sftp_media_transfer",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "Sftp app transferts",
+  "main": "build/app.js",
   "scripts": {
-    "clean": "rimraf ./dist",
+    "clean": "rimraf ./dist && rimraf ./build",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "build:js": "babel src --out-dir ./dist --extensions \".ts,.tsx\" --source-maps inline",
+    "build:js": "babel src --out-dir ./build --extensions \".ts,.tsx\" --source-maps inline",
     "build:types": "tsc --emitDeclarationOnly",
+    "cp": "cpx .env ./build/conf && cpx 1stLaunch ./build/conf && cpx ./src/assets/**/* ./build/assets/",
     "build": "npm run build:types && npm run build:js",
-    "start:app": "electron --verbose app.js",
-    "start": "npm run clean && npm run lint && npm run build && npm run start:app",
-    "electron:version": "electron --version"
+    "start:app": "electron build/app.js",
+    "start": "npm run clean && npm run lint && npm run build && npm run cp && npm run start:app",
+    "electron:version": "electron --version",
+    "dist": "npm run cp && electron-builder"
+  },
+  "build": {
+    "appId": "com.julianitow.sftp",
+    "directories": {
+      "output": "./dist"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    
+    "win": {
+    },
+    "linux": {},
+    "mac": {}
   },
   "repository": "https://github.com/julien-guillan/bored",
   "author": "Julien-Guillan",
@@ -28,6 +46,7 @@
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
     "electron": "^16.0.5",
+    "electron-builder": "^22.14.5",
     "mkdirp": "^1.0.4",
     "nodemon": "^2.0.15",
     "regenerator-runtime": "^0.13.9",
@@ -37,6 +56,7 @@
   "dependencies": {
     "@babel/runtime": "^7.16.5",
     "@electron/remote": "^2.0.1",
+    "cpx": "^1.5.0",
     "dotenv": "^10.0.0",
     "npx": "^10.2.2",
     "sass": "^1.45.0",

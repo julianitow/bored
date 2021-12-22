@@ -8,7 +8,7 @@ import * as http from 'http';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ApplicationController } from '../ApplicationController/ApplicationController';
-dotenv.config();
+dotenv.config({path: path.join(__dirname, '../conf/.env')});
 
 const DIR_TYPE = '';
 
@@ -53,7 +53,7 @@ export function sftp(file: File, type: string, controller: ApplicationController
     };
     const client: Client = new Client('sftp-file-transfer');
     client.connect(config).then(async () => {
-        console.log(file.size);
+        console.log(file);
         if (file.type === DIR_TYPE) {
             fs.readdir(file.path, (err, files) => {
                 console.log("file", files);
