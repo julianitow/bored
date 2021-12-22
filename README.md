@@ -11,7 +11,8 @@
 All done
 
 ## Next steps
-Use typescript instead of Vanilla JS
+* Directories upload implementation
+* Monitor Electron 16 typescript issue: [Issue 94](https://github.com/electron/remote/issues/94)
 ***
 ## Disclaimer
 
