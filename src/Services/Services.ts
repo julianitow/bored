@@ -1,12 +1,12 @@
 //module for each service to implement
 
 import { exec } from 'child_process';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import { dialog } from '@electron/remote';
 import Client from 'ssh2-sftp-client'; 
-import http from 'http';
-import fs from 'fs';
-import path from 'path';
+import * as http from 'http';
+import * as fs from 'fs';
+import * as path from 'path';
 import { ApplicationController } from '../ApplicationController/ApplicationController';
 dotenv.config();
 
@@ -91,7 +91,7 @@ export function sftp(file: File, type: string, controller: ApplicationController
 export function getFreeSpace(): Promise<string> {
     return new Promise((resolve, reject) => {
         if(sshKey !== '') {
-            cmd = `ssh -i ${sshKey} ${username}@${host} "df -h | grep sdb | awk '{print $4}'"`
+            const cmd = `ssh -i ${sshKey} ${username}@${host} "df -h | grep sdb | awk '{print $4}'"`
             exec(cmd, (err, stdout, stderr) => {
                 if (err) {
                     reject(err);

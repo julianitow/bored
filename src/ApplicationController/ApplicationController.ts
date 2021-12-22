@@ -1,6 +1,5 @@
 import * as Service from '../Services';
 import { dialog } from '@electron/remote';
-import runtime from 'regenerator-runtime';
 import { App } from '../Application/Application';
 
 const SERIE_TYPE = 'TV-Shows';

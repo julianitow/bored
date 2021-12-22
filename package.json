@@ -1,25 +1,20 @@
 {
-  "name": "electron-quick-start",
+  "name": "sftp_media_transfer",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "",
   "main": "main.js",
   "scripts": {
     "clean": "rimraf ./dist",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "compile:src": "babel src --out-dir ./dist",
-    "compile": "npm run compile:src",
-    "start": "npm run clean && npm run lint && npm run compile && electron app.js",
+    "build:js": "babel src --out-dir ./dist --extensions \".ts,.tsx\" --source-maps inline",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build": "npm run build:types && npm run build:js",
+    "start:app": "electron --verbose app.js",
+    "start": "npm run clean && npm run lint && npm run build && npm run start:app",
     "electron:version": "electron --version"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
-  ],
-  "author": "GitHub",
+  "repository": "https://github.com/julien-guillan/bored",
+  "author": "Julien-Guillan",
   "license": "CC0-1.0",
   "devDependencies": {
     "@babel/cli": "^7.16.0",
@@ -27,6 +22,7 @@
     "@babel/node": "^7.16.5",
     "@babel/plugin-proposal-class-properties": "^7.16.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.16.5",
+    "@babel/plugin-transform-runtime": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
     "@babel/preset-typescript": "^7.16.5",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
@@ -39,6 +35,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
+    "@babel/runtime": "^7.16.5",
     "@electron/remote": "^2.0.1",
     "dotenv": "^10.0.0",
     "npx": "^10.2.2",

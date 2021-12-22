@@ -9,7 +9,6 @@ export class App {
     constructor() {
         this.controller = new ApplicationController(this);
         this.appView = new ApplicationView(this.controller);
-        console.log('HELLO FROM APP');
     }
 
     view(): void {
