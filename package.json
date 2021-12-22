@@ -1,6 +1,6 @@
 {
   "name": "sftp_media_transfer",
-  "version": "1.0.0",
+  "version": "0.3",
   "description": "Sftp app transferts",
   "main": "build/app.js",
   "scripts": {
@@ -13,7 +13,8 @@
     "start:app": "electron build/app.js",
     "start": "npm run clean && npm run lint && npm run build && npm run cp && npm run start:app",
     "electron:version": "electron --version",
-    "dist": "npm run cp && electron-builder"
+    "dist": "npm run cp && electron-builder",
+    "dist:tmp": "npm run clean && npm run build:js && npm run dist"
   },
   "build": {
     "appId": "com.julianitow.sftp",
