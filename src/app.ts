@@ -10,6 +10,7 @@ function createWindow (): void {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, './preload.js'),
       nodeIntegration: true
@@ -20,7 +21,7 @@ function createWindow (): void {
   mainWindow.loadFile(path.join(__dirname, './assets/index.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   dotenv.config({ path: './conf/.env'});
   remote.initialize();

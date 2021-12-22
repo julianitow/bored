@@ -2,6 +2,10 @@ import { ApplicationController } from '../ApplicationController';
 import { ApplicationView } from '../View/ApplicationView';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as dotenv from 'dotenv';
+import { dialog } from '@electron/remote';
+
+dotenv.config({path: path.join(__dirname, './conf/.env')});
 
 const FIRST_LAUNCH_FILENAME = '1stLaunch'
 
@@ -15,18 +19,16 @@ export class App {
         this.appView = new ApplicationView(this.controller);
     }
 
-    checkFirstLaunch(): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => { 
-            fs.readFile(path.join(__dirname, '../conf/', FIRST_LAUNCH_FILENAME), (err, buff) => {
-                if (err) reject(err);
-                const val = buff.toString();
-                if (val ==  'true') {
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
+    checkFirstLaunch(): boolean {
+        if(process.env.host === '') {
+            dialog.showMessageBoxSync(null, {
+                type: 'warning',
+                message: 'No configuration detected, did you create have .env file in conf directory ?'
             });
-        });
+            return false;
+        } else {
+            return true;
+        }
     }
 
     setFirstLaunch(val: string): void {
