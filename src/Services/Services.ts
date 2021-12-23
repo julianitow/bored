@@ -58,8 +58,7 @@ export function sftp(file: File, type: string, controller: ApplicationController
                 const progress = Math.floor((filesUploaded / filesCount) * 100);
                 controller.updateProgressView(progress);
             });
-            let result = await client.uploadDir(srcPath, `${remoteDir}/${type}/${file.name}`);
-            //console.log(result);
+            await client.uploadDir(srcPath, `${remoteDir}/${type}/${file.name}`);
             return;
         }
         return client.fastPut(srcPath, `${remoteDir}/${type}/${file.name}`, {
