@@ -50,6 +50,28 @@ function readDirectory(dirPath: string): DirectoryInfo {
     return result;
 }
 
+function refreshPlex() {
+    return new Promise((resolve, reject) => {
+        const options = {
+            hostname: host,
+            port: 3000,
+            path: '/refresh',
+            method: 'GET'
+        };
+        const req = http.request(options, res => {
+            res.on('data', data => {
+                console.log('refreshing plex');
+                resolve(data.toString());
+            }); 
+        });
+    
+        req.on('error', err => {
+            reject(err);
+        });
+        req.end();
+    });
+}
+
 /**
  * Send file over sftp
  * @param {*} file File
@@ -79,7 +101,8 @@ export function sftp(file: File, type: string, controller: ApplicationController
                 controller.updateProgressView(progress);
                 controller.updateCurrentFilename(`${nextFile}...`);
             });
-            await client.uploadDir(srcPath, `${remoteDir}/${type}/${file.name}`);
+            const result = await client.uploadDir(srcPath, `${remoteDir}/${type}/${file.name}`);
+            console.log(result);
             return;
         }
         return client.fastPut(srcPath, `${remoteDir}/${type}/${file.name}`, {
@@ -97,6 +120,8 @@ export function sftp(file: File, type: string, controller: ApplicationController
             message: 'Finished !'
         });
         return client.end();
+    }).finally(() => {
+        refreshPlex();
     }).catch(err => {
         console.error(err);
     });
