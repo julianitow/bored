@@ -106,19 +106,21 @@ export function sftp(file: File, type: string, controller: ApplicationController
             console.log(result);
             return;
         }
-        return client.fastPut(srcPath, `${remoteDir}/${type}/${file.name}`, {
+        const result =  client.fastPut(srcPath, `${remoteDir}/${type}/${file.name}`, {
             step: step => {
                 const progress = Math.floor((step / file.size) * 100);
                 controller.updateCurrentFilename(`${file.name}...`);
                 controller.updateProgressView(progress);
             }
         });
+        return result;
     }).then(() => {
         controller.updateProgressView(0);
-        controller.updateCurrentFilename('Finished !')
+        controller.updateCurrentFilename(`Finished ! ${file.name}`);
         dialog.showMessageBoxSync(null, {
             type: 'info',
-            message: 'Finished !'
+            title: 'Upload completed',
+            message: `Finished ! ${file.name}`
         });
         return client.end();
     }).finally(() => {

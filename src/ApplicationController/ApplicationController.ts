@@ -54,28 +54,42 @@ export class ApplicationController {
     dropHandler(ev: DragEvent): void {
         ev.preventDefault();
         if (ev.dataTransfer.items) {
-            const file: File = ev.dataTransfer.items[0].getAsFile();
+            const items = ev.dataTransfer.items;
+            const filenames: string[] = new Array<string>();
+            const files: File[] = new Array<File>();
+            for(const i in items) {
+                if(typeof items[i].getAsFile === 'function') {
+                    const file: File = items[i].getAsFile();
+                    filenames.push(file.name);
+                    files.push(file);
+                }
+            }
             const options: Electron.MessageBoxOptions  = {
               type: 'question',
               buttons: ['Cancel', 'Serie', 'Film', 'Share file'],
-              title: 'C\'est quoi ?',
-              message: `${file.name} ?`,
+              title: 'Je mets ça où ?',
+              message: `${filenames} ?`,
             }
-
             const res: number = dialog.showMessageBoxSync(null, options);
+            let uploadType = '';
             switch(res) {
                 case 1:
-                    this.upload(file, SERIE_TYPE);
+                    uploadType = SERIE_TYPE;
                     break;
                 case 2:
-                    this.upload(file, FILM_TYPE);
+                    uploadType = FILM_TYPE
                     break;
                 case 3:
-                    this.upload(file, SHARE_TYPE);
+                    uploadType = SHARE_TYPE;
                     break;
                 default:
                     break;
             }
+            for (const i in files) {
+                console.log(files[i]);
+                this.upload(files[i], uploadType);
+            }
+            return;
         }
     }
 
