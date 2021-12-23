@@ -38,7 +38,7 @@ export class ApplicationController {
         this.application.appView.updateInfo();
     }
 
-    updateProgressView(value): void {
+    updateProgressView(value: number): void {
         this.application.appView.setProgressBar(value);
     }
 
@@ -72,15 +72,6 @@ export class ApplicationController {
     }
 
     upload(file, type): void {
-        //TODO Directory implementation
-        console.log(file);
-        /*if (file.type === DIR_TYPE) {
-            dialog.showMessageBoxSync(null, {
-                type: 'warning',
-                message: 'Les dossiers ne sont pas encore pris en charge, uniquement les fichiers'
-            });
-            return;
-        }*/
         const fileSize: number = file.size / 1000000000; //conversion en go
         this.freeSpace().then(space => {
             const spaceFreeStr: string = space.split('G')[0];

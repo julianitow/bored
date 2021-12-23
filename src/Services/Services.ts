@@ -5,8 +5,8 @@ import * as dotenv from 'dotenv';
 import { dialog } from '@electron/remote';
 import Client from 'ssh2-sftp-client'; 
 import * as http from 'http';
-import * as fs from 'fs';
 import * as path from 'path';
+import * as fs from 'fs';
 import { ApplicationController } from '../ApplicationController/ApplicationController';
 dotenv.config({path: path.join(__dirname, '../conf/.env')});
 
@@ -18,27 +18,22 @@ const password: string = process.env.PASSWORD;
 const remoteDir: string = process.env.REMOTE_DIR;
 const sshKey: string = process.env.SSH_KEY;
 
-//TODO finish recursive implementation 
-/*function readDirectory(path, callback, endCallback) {
-    fs.readdir(path, (err, files) => {
-        if (err) return endCallback(err);
-        files.forEach(file => {
-            fs.stat(path.join(path, file), (err, stats) => {
-                if(err) endCallback(err);
-                if(stats.isDirectory()) {
-                    readDirectory(path.join(path, file), callback, () => {
-                        pending--;
-                        if(pending === 0) {
-                            return endCallback(null);
-                        }
-                    });
-                } else {
-
-                }
-            });
-        });
-    });
-};*/
+//TODO add directory size
+function readDirectory(dirPath: string): number {
+    let filesCount = 0;
+    const files = fs.readdirSync(dirPath);
+    for(let i = 0; i < files.length; i++) {
+        let file = files[i];
+        const src = path.join(dirPath, file);
+        const stats = fs.statSync(src);
+        if(stats.isDirectory()) {
+            filesCount += readDirectory(path.join(dirPath, file));
+        } else {
+            filesCount++;
+        }
+    }
+    return filesCount;
+}
 
 /**
  * Send file over sftp
@@ -55,20 +50,22 @@ export function sftp(file: File, type: string, controller: ApplicationController
     client.connect(config).then(async () => {
         console.log(file);
         if (file.type === DIR_TYPE) {
-            fs.readdir(file.path, (err, files) => {
-                console.log("file", files);
-            });
+            const filesCount = readDirectory(srcPath);
+            let filesUploaded = 0;
             client.on('upload', info => {
-                console.log(info);
+                console.log(`Uploaded: ${info.source}`);
+                filesUploaded++;
+                const progress = Math.floor((filesUploaded / filesCount) * 100);
+                controller.updateProgressView(progress);
             });
-            //let result = await client.uploadDir(srcPath, `${remoteDir}/${type}/${file.name}`);
+            let result = await client.uploadDir(srcPath, `${remoteDir}/${type}/${file.name}`);
             //console.log(result);
             return;
         }
         return client.fastPut(srcPath, `${remoteDir}/${type}/${file.name}`, {
             step: step => {
-                const percent: number = Math.floor((step / file.size) * 100);
-                controller.updateProgressView(percent);
+                const progress = Math.floor((step / file.size) * 100);
+                controller.updateProgressView(progress);
             }
         });
     }).then(() => {
