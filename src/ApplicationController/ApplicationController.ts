@@ -4,6 +4,7 @@ import { App } from '../Application/Application';
 
 const SERIE_TYPE = 'TV-Shows';
 const FILM_TYPE = 'Movies';
+const SHARE_TYPE = 'ftp';
 
 export class ApplicationController {
 
@@ -56,7 +57,7 @@ export class ApplicationController {
             const file: File = ev.dataTransfer.items[0].getAsFile();
             const options: Electron.MessageBoxOptions  = {
               type: 'question',
-              buttons: ['Cancel', 'Serie', 'Film'],
+              buttons: ['Cancel', 'Serie', 'Film', 'Share file'],
               title: 'C\'est quoi ?',
               message: `${file.name} ?`,
             }
@@ -68,6 +69,9 @@ export class ApplicationController {
                     break;
                 case 2:
                     this.upload(file, FILM_TYPE);
+                    break;
+                case 3:
+                    this.upload(file, SHARE_TYPE);
                     break;
                 default:
                     break;

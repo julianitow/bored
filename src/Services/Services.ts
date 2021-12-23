@@ -11,6 +11,7 @@ import { ApplicationController } from '../ApplicationController/ApplicationContr
 dotenv.config({path: path.join(__dirname, '../conf/.env')});
 
 const DIR_TYPE = '';
+const SHARE_TYPE = 'ftp';
 
 const host: string = process.env.HOST;
 const username: string = process.env.USER;
@@ -121,7 +122,9 @@ export function sftp(file: File, type: string, controller: ApplicationController
         });
         return client.end();
     }).finally(() => {
-        refreshPlex();
+        if (type !== SHARE_TYPE) {
+            refreshPlex();
+        }
     }).catch(err => {
         console.error(err);
     });

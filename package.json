@@ -1,6 +1,6 @@
 {
   "name": "sftp_media_transfer",
-  "version": "0.3",
+  "version": "0.4.0",
   "description": "Sftp app transferts",
   "main": "build/app.js",
   "scripts": {
