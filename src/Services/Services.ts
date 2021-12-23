@@ -18,21 +18,36 @@ const password: string = process.env.PASSWORD;
 const remoteDir: string = process.env.REMOTE_DIR;
 const sshKey: string = process.env.SSH_KEY;
 
+interface DirectoryInfo {
+    files: string[],
+    count: number
+} 
+
 //TODO add directory size
-function readDirectory(dirPath: string): number {
+function readDirectory(dirPath: string): DirectoryInfo {
     let filesCount = 0;
+    let filesList: string[] = new Array<string>(); 
     const files = fs.readdirSync(dirPath);
     for(let i = 0; i < files.length; i++) {
         let file = files[i];
         const src = path.join(dirPath, file);
         const stats = fs.statSync(src);
         if(stats.isDirectory()) {
-            filesCount += readDirectory(path.join(dirPath, file));
+            const info = readDirectory(path.join(dirPath, file))
+            filesCount += info.count;
+            for(let j = 0; j < info.files.length; j++) {
+                filesList.push(info.files[j]);
+            }
         } else {
             filesCount++;
+            filesList.push(file);
         }
     }
-    return filesCount;
+    const result: DirectoryInfo = {
+        count: filesCount,
+        files: filesList
+    }
+    return result;
 }
 
 /**
@@ -50,12 +65,14 @@ export function sftp(file: File, type: string, controller: ApplicationController
     client.connect(config).then(async () => {
         console.log(file);
         if (file.type === DIR_TYPE) {
-            const filesCount = readDirectory(srcPath);
+            const dirInfo = readDirectory(srcPath);
             let filesUploaded = 0;
+            console.log(dirInfo.count);
+            console.log(dirInfo.files);
             client.on('upload', info => {
-                console.log(`Uploaded: ${info.source}`);
+                // console.log(`Uploaded: ${info.source}`);
                 filesUploaded++;
-                const progress = Math.floor((filesUploaded / filesCount) * 100);
+                const progress = Math.floor((filesUploaded / dirInfo.count) * 100);
                 controller.updateProgressView(progress);
             });
             await client.uploadDir(srcPath, `${remoteDir}/${type}/${file.name}`);
@@ -64,6 +81,7 @@ export function sftp(file: File, type: string, controller: ApplicationController
         return client.fastPut(srcPath, `${remoteDir}/${type}/${file.name}`, {
             step: step => {
                 const progress = Math.floor((step / file.size) * 100);
+                controller.updateCurrentFilename(file.name);
                 controller.updateProgressView(progress);
             }
         });
