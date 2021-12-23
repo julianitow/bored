@@ -26,10 +26,10 @@ interface DirectoryInfo {
 //TODO add directory size
 function readDirectory(dirPath: string): DirectoryInfo {
     let filesCount = 0;
-    let filesList: string[] = new Array<string>(); 
+    const filesList: string[] = new Array<string>(); 
     const files = fs.readdirSync(dirPath);
     for(let i = 0; i < files.length; i++) {
-        let file = files[i];
+        const file = files[i];
         const src = path.join(dirPath, file);
         const stats = fs.statSync(src);
         if(stats.isDirectory()) {
@@ -89,7 +89,7 @@ export function sftp(file: File, type: string, controller: ApplicationController
         if (file.type === DIR_TYPE) {
             const dirInfo = readDirectory(srcPath);
             let filesUploaded = 0;
-            let files = dirInfo.files;
+            const files = dirInfo.files;
             client.on('upload', info => {
                 const basename = path.basename(info.source);
                 const indexNextFile = files.indexOf(basename) + 1;

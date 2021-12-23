@@ -30,7 +30,7 @@ export class ApplicationController {
         return space;
     }
 
-    dragOverHandler(ev): void {
+    dragOverHandler(ev: DragEvent): void {
         ev.preventDefault();
     }
 
@@ -50,7 +50,7 @@ export class ApplicationController {
         //TODO
     }
 
-    dropHandler(ev): void {
+    dropHandler(ev: DragEvent): void {
         ev.preventDefault();
         if (ev.dataTransfer.items) {
             const file: File = ev.dataTransfer.items[0].getAsFile();
@@ -75,7 +75,7 @@ export class ApplicationController {
         }
     }
 
-    upload(file, type): void {
+    upload(file: File, type: string): void {
         const fileSize: number = file.size / 1000000000; //conversion en go
         this.freeSpace().then(space => {
             const spaceFreeStr: string = space.split('G')[0];
