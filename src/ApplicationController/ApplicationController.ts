@@ -42,6 +42,10 @@ export class ApplicationController {
         this.application.appView.setProgressBar(value);
     }
 
+    updateCurrentFilename(filename: string): void {
+        this.application.appView.setCurrentFilename(filename);
+    }
+
     disableZone(): void {
         //TODO
     }

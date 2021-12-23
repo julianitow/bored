@@ -4,6 +4,7 @@ export class ApplicationView {
     public parentElement: HTMLElement;
     private labelDiv: HTMLDivElement;
     private infoDiv: HTMLDivElement;
+    private filenameDiv: HTMLDivElement;
     private zoneDiv: HTMLDivElement;
     private progress: HTMLProgressElement;
     private controller: ApplicationController;
@@ -46,7 +47,10 @@ export class ApplicationView {
         this.infoDiv.className = 'info';
         this.updateInfo();
 
+        this.filenameDiv = document.createElement('div');
+
         this.labelDiv.append(this.infoDiv);
+        this.parentElement.append(this.filenameDiv);
         this.parentElement.append(this.labelDiv);
     }
 
@@ -60,6 +64,10 @@ export class ApplicationView {
 
     setProgressBar(value: number): void {
         this.progress.value = value;
+    }
+
+    setCurrentFilename(filename: string): void {
+        this.filenameDiv.innerText = `Uploading: ${filename}`;
     }
 
     progressBar(): void {

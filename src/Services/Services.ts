@@ -67,13 +67,17 @@ export function sftp(file: File, type: string, controller: ApplicationController
         if (file.type === DIR_TYPE) {
             const dirInfo = readDirectory(srcPath);
             let filesUploaded = 0;
-            console.log(dirInfo.count);
-            console.log(dirInfo.files);
+            let files = dirInfo.files;
             client.on('upload', info => {
-                // console.log(`Uploaded: ${info.source}`);
+                const basename = path.basename(info.source);
+                const indexNextFile = files.indexOf(basename) + 1;
+                const nextFile = files[indexNextFile];
+                console.log(`Uploaded: ${info.source}`);
+                console.log(`Uploading: ${files[indexNextFile]}`);
                 filesUploaded++;
                 const progress = Math.floor((filesUploaded / dirInfo.count) * 100);
                 controller.updateProgressView(progress);
+                controller.updateCurrentFilename(`${nextFile}...`);
             });
             await client.uploadDir(srcPath, `${remoteDir}/${type}/${file.name}`);
             return;
@@ -81,12 +85,13 @@ export function sftp(file: File, type: string, controller: ApplicationController
         return client.fastPut(srcPath, `${remoteDir}/${type}/${file.name}`, {
             step: step => {
                 const progress = Math.floor((step / file.size) * 100);
-                controller.updateCurrentFilename(file.name);
+                controller.updateCurrentFilename(`${file.name}...`);
                 controller.updateProgressView(progress);
             }
         });
     }).then(() => {
         controller.updateProgressView(0);
+        controller.updateCurrentFilename('Finished !')
         dialog.showMessageBoxSync(null, {
             type: 'info',
             message: 'Finished !'
