@@ -86,8 +86,8 @@ export function sftp(file: File, type: string, controller: ApplicationController
     };
     const client: Client = new Client('sftp-file-transfer');
     client.connect(config).then(async () => {
-        console.log(file);
-        if (file.type === DIR_TYPE) {
+        const stats = await fs.statSync(file.path);
+        if (stats.isDirectory()) {
             const dirInfo = readDirectory(srcPath);
             let filesUploaded = 0;
             const files = dirInfo.files;
