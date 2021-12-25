@@ -140,7 +140,7 @@ export function sftp(file: File, type: string, controller: ApplicationController
 export function getFreeSpace(): Promise<string> {
     return new Promise((resolve, reject) => {
         if(sshKey !== '') {
-            const cmd = `ssh -i ${sshKey} ${username}@${host} "df -h | grep sdb | awk '{print $4}'"`
+            const cmd = `ssh -i ${sshKey} ${username}@${host} df -h | grep sdb | awk '{print $4}'`
             exec(cmd, (err, stdout, stderr) => {
                 if (err) {
                     reject(err);
