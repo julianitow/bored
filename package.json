@@ -61,6 +61,6 @@
     "dotenv": "^10.0.0",
     "npx": "^10.2.2",
     "sass": "^1.45.0",
-    "ssh2-sftp-client": "^7.2.1"
+    "ssh2-sftp-client": "^8.1.0"
   }
 }
